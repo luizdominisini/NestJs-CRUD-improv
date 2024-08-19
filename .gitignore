@@ -58,7 +58,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # Luiz
 /package.json
 /package-lock.json
-/README.node_modules
+/README.md
 /tsconfig.build.json
 /.prettierrc
 /.eslintrc.js
