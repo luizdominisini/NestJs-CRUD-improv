@@ -9,6 +9,8 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import e from "express";
+import { PassThrough } from "stream";
 
 @Injectable()
 export class UserService {
@@ -72,9 +74,11 @@ export class UserService {
 
   async findByEmail(email: string) {
     const user = await this.userRepository.findOneBy({ email });
-    if (!email) {
-      throw new UnauthorizedException("Email Incorreto");
+
+    if (!user) {
+      throw new NotFoundException("Email não encontrado");
     }
+
     return user;
   }
 }

@@ -11,7 +11,7 @@ import { JwtService } from "@nestjs/jwt";
 export class AuthGuard implements CanActivate {
   constructor(private readonly JwtService: JwtService) {}
 
-  canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext) {
     const { authorization } = context.switchToHttp().getRequest().headers;
     if (!authorization) {
       throw new BadRequestException("Token necessário");
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const dados = this.JwtService.verify(token, {
+      await this.JwtService.verify(token, {
         audience: "users",
         issuer: "login",
       });

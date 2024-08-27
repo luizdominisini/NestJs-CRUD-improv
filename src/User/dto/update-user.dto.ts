@@ -6,15 +6,14 @@ import {
 } from "class-validator";
 
 export class UpdateUserDto {
-  @IsOptional()
   @IsString()
+  @IsOptional()
   name: string;
 
-  @IsOptional()
   @IsEmail()
+  @IsOptional()
   email: string;
 
-  @IsOptional()
   @IsStrongPassword({
     minLength: 6,
     minUppercase: 0,
@@ -22,5 +21,6 @@ export class UpdateUserDto {
     minLowercase: 0,
     minNumbers: 0,
   })
+  @IsOptional()
   password: string;
 }
