@@ -6,13 +6,19 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { UserService } from "../../User/user.service";
+import { decode } from "jsonwebtoken";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly JwtService: JwtService) {}
+  constructor(
+    private readonly JwtService: JwtService,
+    private readonly userService: UserService
+  ) {}
 
   async canActivate(context: ExecutionContext) {
-    const { authorization } = context.switchToHttp().getRequest().headers;
+    const req = context.switchToHttp().getRequest();
+    const { authorization } = req.headers;
     if (!authorization) {
       throw new BadRequestException("Token necessário");
     }
@@ -27,7 +33,8 @@ export class AuthGuard implements CanActivate {
         audience: "users",
         issuer: "login",
       });
-
+      const { id } = this.JwtService.decode(token);
+      req.user = await this.userService.userShou(id);
       return true;
     } catch (error) {
       throw new BadRequestException(error);

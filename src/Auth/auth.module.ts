@@ -5,6 +5,8 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "../User/entity/user.entity";
+import { MulterModule } from "@nestjs/platform-express";
+import { FileModule } from "../file/file.module";
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { UserEntity } from "../User/entity/user.entity";
       signOptions: { expiresIn: "1d" },
     }),
     TypeOrmModule.forFeature([UserEntity]),
+    FileModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

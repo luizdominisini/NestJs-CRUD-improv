@@ -80,6 +80,8 @@ export class AuthService {
     }
   }
 
+  
+
   async isValidToken(token: string) {
     try {
       const dados = this.jwt.verify(token, {

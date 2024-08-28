@@ -5,8 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Role } from "../../Auth/models/role.enum";
 
-@Entity("users_serv")
+@Entity("users")
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
