@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import * as Twilio from "twilio";
-
+import * as dotenv from "dotenv";
+dotenv.config();
 @Injectable()
 export class SmsService {
   async sendMsg() {
-    const accountSid = "AC8a07494065a797f4eb0b519ca75c5c8f";
-    const authToken = "ec5b7a7bd7b6fb8745461b95b164c093";
+    const accountSid = process.env.ACCOUNTSID;
+    const authToken = process.env.AUTHTOKEN;
     const client = Twilio(accountSid, authToken);
 
     client.messages
