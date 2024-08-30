@@ -6,6 +6,7 @@ import { typeOrmConfig } from "./database/dataSourcer";
 import { ProductModule } from "./Product/product.module";
 import { UserModule } from "./User/user.module";
 import { AuthModule } from "./Auth/auth.module";
+import { SmsModule } from "./Twilio/sms.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { AuthModule } from "./Auth/auth.module";
     ProductModule,
     UserModule,
     AuthModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
