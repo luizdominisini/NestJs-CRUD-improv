@@ -2,25 +2,26 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { ProductEntity } from './entity/product.entity';
-import { CreateProductDto } from './dto/create-product.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateProductDto } from './dto/update-product.dto';
+} from "@nestjs/common";
+import { Repository } from "typeorm";
+import { ProductEntity } from "./entity/product.entity";
+import { CreateProductDto } from "./dto/create-product.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { UpdateProductDto } from "./dto/update-product.dto";
+import { PatchProductDto } from "./dto/patch-product.dto";
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectRepository(ProductEntity)
-    private productRepository: Repository<ProductEntity>,
+    private productRepository: Repository<ProductEntity>
   ) {}
 
   async createProduct(data: CreateProductDto) {
     const nameExist = await this.nameExist(data.name);
 
     if (nameExist) {
-      throw new ForbiddenException('Produto já existe com este nome');
+      throw new ForbiddenException("Produto já existe com este nome");
     }
 
     const { name, quantity, price } = data;
@@ -54,6 +55,18 @@ export class ProductService {
     return product;
   }
 
+  async patchProduct(id: number, data: PatchProductDto) {
+    const product = await this.productExist(id);
+
+    const { name, quantity, price } = data;
+
+    if (name) data.name = name;
+    if (quantity) data.quantity = quantity;
+    if (price) data.price = price;
+
+    return this.productRepository.update(id, { name, quantity, price });
+  }
+
   async deleteProduct(id: number) {
     const product = await this.productExist(id);
     return this.productRepository.remove(product);
@@ -69,7 +82,7 @@ export class ProductService {
   async productExist(id: number) {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) {
-      throw new NotFoundException('Produto não encontrado');
+      throw new NotFoundException("Produto não encontrado");
     }
     return product;
   }

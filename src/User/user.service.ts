@@ -9,8 +9,8 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import e from "express";
-import { PassThrough } from "stream";
+import { hash } from "bcryptjs";
+import { PatchUserDto } from "./dto/patch-user.dto";
 
 @Injectable()
 export class UserService {
@@ -22,8 +22,15 @@ export class UserService {
   async userCreate(data: CreateUserDto) {
     await this.emailExist(data.email);
 
-    const { name, email, password } = data;
-    const user = this.userRepository.create({ name, email, password });
+    const { name, email, password, role } = data;
+    const hashPass = await hash(password, 10);
+
+    const user = this.userRepository.create({
+      name,
+      email,
+      password: hashPass,
+      role,
+    });
     await this.userRepository.save(user);
     return user;
   }
@@ -32,7 +39,7 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async userShou(id: number) {
+  async userShow(id: number) {
     return this.userExist(id);
   }
 
@@ -40,13 +47,31 @@ export class UserService {
     const user = await this.userExist(id);
 
     const { name, email, password } = data;
+    const hashPass = await hash(password, 10);
     await this.userRepository.update(id, {
       name,
       email,
-      password,
+      password: hashPass,
     });
 
     return user;
+  }
+
+  async userPatch(id: number, { name, email, password }: PatchUserDto) {
+    await this.userExist(id);
+
+    const data: any = {};
+    if (name) {
+      data.name = name;
+    }
+    if (email) {
+      data.email = email;
+    }
+    if (password) {
+      data.password = await hash(password, 10);
+    }
+
+    return this.userRepository.update(id, { name, email, password });
   }
 
   async userDelete(id: number) {

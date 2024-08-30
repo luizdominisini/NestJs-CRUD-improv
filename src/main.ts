@@ -1,10 +1,12 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { dataSource } from "./database/dataSourcer";
-import { ValidationPipe } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const port = 3000;
 
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
@@ -17,6 +19,10 @@ async function bootstrap() {
     .catch((error) => {
       console.log(error);
     });
-  await app.listen(3000, () => console.log("API RODANDO NA PORTA 3000"));
+
+  const logger = new Logger("NestApplication");
+  await app.listen(port, async () => {
+    logger.log(`Running at ${await app.getUrl()}`);
+  });
 }
 bootstrap();

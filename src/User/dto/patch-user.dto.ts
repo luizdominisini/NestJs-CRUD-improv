@@ -5,11 +5,13 @@ import {
   IsStrongPassword,
 } from "class-validator";
 
-export class UpdateUserDto {
+export class PatchUserDto {
   @IsString()
+  @IsOptional()
   name: string;
 
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @IsStrongPassword({
@@ -19,5 +21,6 @@ export class UpdateUserDto {
     minLowercase: 0,
     minNumbers: 0,
   })
+  @IsOptional()
   password: string;
 }

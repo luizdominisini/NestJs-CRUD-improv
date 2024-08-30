@@ -10,6 +10,8 @@ import { UserEntity } from "../User/entity/user.entity";
 import { UserService } from "../User/user.service";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
+import { decode } from "punycode";
+import { compare } from "bcryptjs";
 @Injectable()
 export class AuthService {
   constructor(
@@ -36,11 +38,10 @@ export class AuthService {
     return { accessToken };
   }
 
-  async login(data: LoginDto) {
-    const { email, password } = data;
+  async login({ email, password }: LoginDto) {
     const user = await this.userService.findByEmail(email);
-
-    if (password !== user.password) {
+    const comparePass = await compare(password, user.password);
+    if (!comparePass) {
       throw new UnauthorizedException("Senha Incorreta");
     }
 
@@ -79,8 +80,6 @@ export class AuthService {
       throw new BadRequestException("Token inválido", err);
     }
   }
-
-  
 
   async isValidToken(token: string) {
     try {
