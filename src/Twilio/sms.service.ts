@@ -12,8 +12,8 @@ export class SmsService {
     client.messages
       .create({
         body: "Está na hora do seu remédio",
-        from: "whatsapp:+14155238886",
-        to: "whatsapp:+5527999943590",
+        from: `whatsapp:${process.env.FROM}`,
+        to: `whatsapp:${process.env.TO}`,
       })
       .then((message) => console.log("Enviado: ", message.sid))
       .catch((error) => console.log("erro ao enviar mensagem ", error));
