@@ -7,6 +7,7 @@ import { ProductModule } from "./Product/product.module";
 import { UserModule } from "./User/user.module";
 import { AuthModule } from "./Auth/auth.module";
 import { SmsModule } from "./Twilio/sms.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SmsModule } from "./Twilio/sms.module";
     UserModule,
     AuthModule,
     SmsModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
